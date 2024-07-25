@@ -1,16 +1,17 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/jmoiron/sqlx"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
-var DB *sql.DB
+var DB *sqlx.DB
 
 func Init() {
 	err := godotenv.Load()
@@ -25,7 +26,7 @@ func Init() {
 	connStr := fmt.Sprintf("user=%s dbname=%s sslmode=disable password=%s", dbUser, dbName, dbPassword)
 	// var err error
 
-	DB, err := sql.Open("postgres", connStr)
+	DB, err := sqlx.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}

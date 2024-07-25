@@ -17,7 +17,7 @@ func RegisterUser(c *gin.Context) {
 	role := "ADMIN"
 	empType := "FULL"
 	team := "Security"
-	err := c.ShouldBindBodyWithJSON(&user)
+	err := c.ShouldBindJSON(&user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -29,7 +29,12 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
-	sqlStatementForAuth := fmt.Sprintf("INSERT INTO user_auth (email,password_hash,role_type,registered_at) VALUES ('%s','%s','%s','%s')", user.Email, hashedPassword, role, time.Now())
+	if database.DB == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection is not initialized"})
+		return
+	}
+
+	sqlStatementForAuth := fmt.Sprintf("INSERT INTO user_auth (email,password_hash,role_type,registered_at) VALUES ('%s','%s','%s','%s')", user.Email, string(hashedPassword), role, time.Now().Format("2006-01-02 15:04:05"))
 
 	result, err := database.DB.Exec(sqlStatementForAuth)
 	if err != nil {
@@ -43,7 +48,7 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
-	sqlStatementForLms := fmt.Sprintf("INSERT INTO users (username, role, emp_type, team, training_assigned, training_completed, created_at) VALUES ('%s','%s','%s','%s','%s','%s','%s')", user.Username, role, empType, team, "{}", "{}", time.Now())
+	sqlStatementForLms := fmt.Sprintf("INSERT INTO users (username, role, emp_type, team, training_assigned, training_completed, created_at) VALUES ('%s','%s','%s','%s','%s','%s','%s')", user.Username, role, empType, team, "{}", "{}", time.Now().Format("2006-01-02 15:04:05"))
 
 	_, err = database.DB.Exec(sqlStatementForLms)
 	if err != nil {
