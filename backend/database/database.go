@@ -26,12 +26,12 @@ func Init() {
 	connStr := fmt.Sprintf("user=%s dbname=%s sslmode=disable password=%s", dbUser, dbName, dbPassword)
 	// var err error
 
-	DB, err := sqlx.Open("postgres", connStr)
+	DB, err = sqlx.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := DB.Ping(); err != nil {
+	if err = DB.Ping(); err != nil {
 		log.Fatal(err)
 	}
 

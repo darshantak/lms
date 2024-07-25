@@ -36,21 +36,21 @@ func RegisterUser(c *gin.Context) {
 
 	sqlStatementForAuth := fmt.Sprintf("INSERT INTO user_auth (email,password_hash,role_type,registered_at) VALUES ('%s','%s','%s','%s')", user.Email, string(hashedPassword), role, time.Now().Format("2006-01-02 15:04:05"))
 
-	result, err := database.DB.Exec(sqlStatementForAuth)
+	_, err = database.DB.Queryx(sqlStatementForAuth)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert the values"})
 		return
 	}
 
-	_, err = result.LastInsertId()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get authId"})
-		return
-	}
+	// _, err = result.LastInsertId()
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get authId"})
+	// 	return
+	// }
 
 	sqlStatementForLms := fmt.Sprintf("INSERT INTO users (username, role, emp_type, team, training_assigned, training_completed, created_at) VALUES ('%s','%s','%s','%s','%s','%s','%s')", user.Username, role, empType, team, "{}", "{}", time.Now().Format("2006-01-02 15:04:05"))
 
-	_, err = database.DB.Exec(sqlStatementForLms)
+	_, err = database.DB.Queryx(sqlStatementForLms)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to insert in the lms table"})
 		return
