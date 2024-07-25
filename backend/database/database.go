@@ -1,29 +1,38 @@
 package database
 
 import (
-    "database/sql"
-    "fmt"
-    "log"
+	"database/sql"
+	"fmt"
+	"log"
+	"os"
 
-    _ "github.com/lib/pq"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
 
-func Init(){
-	connStr:= "user=username dbname=lms_project sslmode=disable password=password"
+func Init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading env file")
+	}
+
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+
+	connStr := fmt.Sprintf("user=%s dbname=%s sslmode=disable password=%s", dbUser, dbName, dbPassword)
 	// var err error
 
-	DB,err := sql.Open("postgres",connStr)
-	if err!=nil{
+	DB, err := sql.Open("postgres", connStr)
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := DB.Ping(); err!= nil{
+	if err := DB.Ping(); err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println("Successfull connection to the DB")
 }
-
-
