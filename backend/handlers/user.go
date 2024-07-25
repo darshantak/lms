@@ -7,6 +7,7 @@ import (
 
 func RegisterUser(c *gin.Context){
 	//implement user reg
+	
 	c.JSON(http.StatusOK,gin.H{"message":"user registration successfull"})
 }
 
