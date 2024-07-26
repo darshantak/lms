@@ -7,3 +7,8 @@ type User struct {
 	EmpType  string `json:"emp_type"`
 	Role     string `json:"role"` //admin or user
 }
+
+type UserAuthDetails struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}

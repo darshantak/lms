@@ -60,5 +60,36 @@ func RegisterUser(c *gin.Context) {
 }
 
 func LoginUser(c *gin.Context) {
+	var userAuthDetails models.UserAuthDetails
+	var storedHash string
+
+	err := c.ShouldBindJSON(&userAuthDetails)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if database.DB == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection is not initialized"})
+		return
+	}
+
+	sqlStatement := fmt.Sprintf("SELECT password_hash FROM user_auth WHERE email='%s'", userAuthDetails.Email)
+
+	row := database.DB.QueryRowx(sqlStatement)
+
+	err = row.Scan(&storedHash)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get the row from the database"})
+		return
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(userAuthDetails.Password)); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
+		return
+	}
+
+	//Generate JWT here
+	
 	c.JSON(http.StatusOK, gin.H{"message": "user logged in"})
 }
