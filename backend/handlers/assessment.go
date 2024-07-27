@@ -13,3 +13,7 @@ func SubmitAssessment(c *gin.Context) {
 func GetAssessments(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"assessments": "list of assessments"})
 }
+
+func CreateAssessments(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "assessment created"})
+}
