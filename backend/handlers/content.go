@@ -1,14 +1,17 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 	"lms/database"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 func UploadContent(c *gin.Context) {
@@ -45,6 +48,26 @@ func UploadContent(c *gin.Context) {
 }
 
 func GetContent(c *gin.Context) {
-	
-	c.JSON(http.StatusOK, gin.H{"contents": "list of contents"})
+	userEmail := c.GetString("email")
+	log.Printf("Retrieved email from context: %s", userEmail)
+
+	var storedTrainingArray []string
+
+	sqlStatement := "SELECT training_assigned FROM users WHERE email=$1"
+
+	// err := database.DB.Select(&storedTrainingArray, sqlStatement, userEmail)
+	err := database.DB.QueryRow(sqlStatement, userEmail).Scan(pq.Array(&storedTrainingArray))
+	if err != nil {
+		log.Printf("Database query error: %v", err)
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, gin.H{"path": "content/GetContent", "error": "No records found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"path": "content/GetContent", "error": "Failed to fetch rows from DB"})
+		return
+	}
+
+	log.Printf("Retrieved training assigned: %v", storedTrainingArray)
+
+	c.JSON(http.StatusOK, gin.H{"contents": storedTrainingArray})
 }

@@ -12,7 +12,7 @@ func SetupRouter() *gin.Engine {
 
 	r.POST("/api/login", handlers.LoginUser)
 	r.POST("/api/register", handlers.RegisterUser)
-
+	
 	generalUser := r.Group("/api").Use(handlers.Authenticate())
 	{
 		generalUser.POST("/contents/upload", handlers.UploadContent)
