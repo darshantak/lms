@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -17,15 +18,21 @@ type Claims struct {
 }
 
 func GenerateToken(email string) (string, error) {
-	expirationTime := time.Now().Add(24 * time.Hour)
-	claims := &Claims{
-		Email: email,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expirationTime),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
-	return token.SignedString(jwtKey)
+    expirationTime := time.Now().Add(24 * time.Hour)
+    claims := &Claims{
+        Email: email,
+        RegisteredClaims: jwt.RegisteredClaims{
+            ExpiresAt: jwt.NewNumericDate(expirationTime),
+        },
+    }
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    fmt.Println("Expiration Time:", expirationTime)
+    signedToken, err := token.SignedString(jwtKey)
+    if err != nil {
+        fmt.Println("Error signing token:", err)
+        return "", err
+    }
+    return signedToken, nil
 }
 
 func Authenticate() gin.HandlerFunc {
