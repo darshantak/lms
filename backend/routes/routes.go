@@ -8,21 +8,22 @@ import (
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
+	r.Static("/uploads", "./uploads")
 
 	r.POST("/api/login", handlers.LoginUser)
 	r.POST("/api/register", handlers.RegisterUser)
 
 	generalUser := r.Group("/api").Use(handlers.Authenticate())
 	{
-		generalUser.POST("/api/contents/upload", handlers.UploadContent)
-		generalUser.GET("/api/contents", handlers.GetContent)
-		generalUser.GET("/api/assessments", handlers.GetAssessments)
-		generalUser.POST("/api/assessments", handlers.CreateAssessments)
-		generalUser.POST("/api/assessments/submit", handlers.SubmitAssessment)
+		generalUser.POST("/contents/upload", handlers.UploadContent)
+		generalUser.GET("/contents", handlers.GetContent)
+		generalUser.GET("/assessments", handlers.GetAssessments)
+		generalUser.POST("/assessments", handlers.CreateAssessments)
+		generalUser.POST("/assessments/submit", handlers.SubmitAssessment)
 	}
 	adminUser := r.Group("/api/admin").Use(handlers.Authenticate())
 	{
-		adminUser.POST("/api/admin/changeAccess", handlers.ChangeAccess)
+		adminUser.POST("/changeAccess", handlers.ChangeAccess)
 	}
 	return r
 }
