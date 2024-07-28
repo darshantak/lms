@@ -8,7 +8,8 @@ import (
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
-
+	r.Static("/uploads", "./uploads")
+	
 	r.POST("/api/login", handlers.LoginUser)
 	r.POST("/api/register", handlers.RegisterUser)
 
