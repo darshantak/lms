@@ -32,8 +32,9 @@ func UploadContent(c *gin.Context) {
 		return
 	}
 
-	sqlStatement := fmt.Sprintf("INSERT INTO content (name, content_type, content_url, created_at, expires_at) VALUES ('%s', '%s', '%s','%s','%s')", title, fileType, filePath, time.Now().Format("2006-01-02 15:04:05"), time.Now().Add(100*time.Hour).Format("2006-01-02 15:04:05"))
+	sqlStatement := fmt.Sprintf("INSERT INTO content (title, content_type, content_url, created_at, expires_at) VALUES ('%s', '%s', '%s','%s','%s')", title, fileType, filePath, time.Now().Format("2006-01-02 15:04:05"), time.Now().Add(100*time.Hour).Format("2006-01-02 15:04:05"))
 
+	fmt.Println(sqlStatement)
 	_, err = database.DB.Queryx(sqlStatement)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert in the database"})

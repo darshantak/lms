@@ -14,7 +14,7 @@ import (
 func RegisterUser(c *gin.Context) {
 	//implement user reg
 	var user models.User
-	role := "ADMIN"
+	// role := "ADMIN"
 	empType := "FULL"
 	team := "Security"
 	err := c.ShouldBindJSON(&user)
@@ -34,7 +34,7 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
-	sqlStatementForAuth := fmt.Sprintf("INSERT INTO user_auth (email,password_hash,role_type,registered_at) VALUES ('%s','%s','%s','%s')", user.Email, string(hashedPassword), role, time.Now().Format("2006-01-02 15:04:05"))
+	sqlStatementForAuth := fmt.Sprintf("INSERT INTO user_auth (email,password_hash,role_type,registered_at) VALUES ('%s','%s','%s','%s')", user.Email, string(hashedPassword), user.Role, time.Now().Format("2006-01-02 15:04:05"))
 
 	_, err = database.DB.Queryx(sqlStatementForAuth)
 	if err != nil {
@@ -48,7 +48,9 @@ func RegisterUser(c *gin.Context) {
 	// 	return
 	// }
 
-	sqlStatementForLms := fmt.Sprintf("INSERT INTO users (username, role, emp_type, team, training_assigned, training_completed, created_at) VALUES ('%s','%s','%s','%s','%s','%s','%s')", user.Username, role, empType, team, "{}", "{}", time.Now().Format("2006-01-02 15:04:05"))
+	sqlStatementForLms := fmt.Sprintf("INSERT INTO users (username, role, emp_type, team, training_assigned, training_completed, created_at,email) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')", user.Username, user.Role, empType, team, "{}", "{}", time.Now().Format("2006-01-02 15:04:05"),user.Email)
+
+	fmt.Println(sqlStatementForLms)
 
 	_, err = database.DB.Queryx(sqlStatementForLms)
 	if err != nil {
