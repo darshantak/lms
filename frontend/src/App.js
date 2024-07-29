@@ -1,11 +1,10 @@
 import { MantineProvider } from '@mantine/core';
-import LoginPage from './LoginPage';
+import LoginPage from './components/LoginPage';
 function App() {
   return (
     <div className="App">
-      <MantineProvider>
         <LoginPage/>
-      </MantineProvider>
+      
     </div>
   );
 }

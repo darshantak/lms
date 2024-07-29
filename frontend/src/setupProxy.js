@@ -1,11 +1,14 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(
-    '/login',
+    "/api",
     createProxyMiddleware({
-      target: 'http://localhost:8008',
+      target: "http://localhost:8008/api",
       changeOrigin: true,
+      pathRewrite: {
+        '^/api': '', // Remove /api prefix when forwarding to backend
+      },
     })
   );
 };
