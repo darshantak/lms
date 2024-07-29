@@ -1,13 +1,11 @@
-import ReactPlayer from 'react-player';
-import './App.css';
+import { MantineProvider } from '@mantine/core';
+import LoginPage from './LoginPage';
 function App() {
   return (
     <div className="App">
-      <ReactPlayer 
-        url = "https://www.youtube.com/watch?v=Mx92lTYxrJQ"
-        volume = "0.4"
-        
-      />
+      <MantineProvider>
+        <LoginPage/>
+      </MantineProvider>
     </div>
   );
 }
