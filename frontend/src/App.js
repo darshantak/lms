@@ -1,14 +1,18 @@
-import ReactPlayer from 'react-player';
-import './App.css';
+import LoginPage from "./components/LoginPage";
+import Dashboard from "./components/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 function App() {
   return (
-    <div className="App">
-      <ReactPlayer 
-        url = "https://www.youtube.com/watch?v=Mx92lTYxrJQ"
-        volume = "0.4"
-        
-      />
-    </div>
+    // <div className="App">
+      <Router>
+        <Routes> 
+          <Route path="/" element={<LoginPage/>} />
+          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard/>}/>} />
+       </Routes>
+        {/* <LoginPage /> */}
+      </Router>
+    // </div>
   );
 }
 
