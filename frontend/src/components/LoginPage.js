@@ -1,8 +1,16 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const notifyToast = (message) => {
+    toast(message);
+  };
+  const navigate = useNavigate();
   const handleLogin = async (event) => {
     // Handle login logic here
     console.log("Email:", email);
@@ -18,14 +26,19 @@ const LoginPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Network response not ok");
+        notifyToast("Network response is not ok");
+        // throw new Error("Network response not ok");
       }
 
       const data = await response.json();
       console.log("Success:", data);
+      notifyToast("Successfull Login");
+      localStorage.setItem("token", data.token);
+
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error:", error);
-      setError("Login failed. Please check your email and password.");
+      setError("Login failed. Please check your email or password.");
     }
   };
 
@@ -38,6 +51,7 @@ const LoginPage = () => {
         backgroundPosition: "center",
       }}
     >
+      <ToastContainer />
       <div className="bg-gray-300 shadow-md rounded-lg px-8 py-6 w-full max-w-xl mx-4">
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-200">
           Welcome Back!
@@ -45,7 +59,7 @@ const LoginPage = () => {
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
-              htmlFor="email"
+              htmlFor="emailLabel"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
               Email Address
@@ -61,7 +75,7 @@ const LoginPage = () => {
           </div>
           <div className="mb-4">
             <label
-              htmlFor="password"
+              htmlFor="passwordLabel"
               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
               Password
@@ -95,6 +109,7 @@ const LoginPage = () => {
           >
             Login
           </button>
+          {error && <div className="text-red-500 text-sm mt-4">{error}</div>}
         </form>
       </div>
     </div>
