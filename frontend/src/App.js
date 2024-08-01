@@ -8,7 +8,7 @@ function App() {
       <Router>
         <Routes> 
           <Route path="/" element={<LoginPage/>} />
-          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard/>}/>} />
+          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />}/>} />
        </Routes>
         {/* <LoginPage /> */}
       </Router>

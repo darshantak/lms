@@ -53,7 +53,7 @@ const LoginPage = () => {
     >
       <ToastContainer />
       <div className="bg-gray-300 shadow-md rounded-lg px-8 py-6 w-full max-w-xl mx-4">
-        <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-200">
+        <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-800">
           Welcome Back!
         </h1>
         <form onSubmit={handleLogin}>
