@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Toast from "../utils/Toast";
+import BounceLoader from "react-spinners/BounceLoader";
+
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [toast, showToast] = useState(false)
-  const navigate = useNavigate();
+  const [toast, showToast] = useState(false);
+  const [loading, setLoading] = useState(true);
+  // const navigate = useNavigate();
   const handleLogin = async (event) => {
     // Handle login logic here
     console.log("Email:", email);
@@ -24,14 +26,14 @@ const LoginPage = () => {
       });
 
       if (!response.ok) {
-        // throw new Error("Network response not ok");
+        throw new Error("Network response not ok");
       }
 
       const data = await response.json();
       console.log("Success:", data);
       localStorage.setItem("token", data.token);
-      showToast(true)
-      navigate("/dashboard");
+      showToast(true);
+      // navigate("/dashboard");
     } catch (error) {
       console.error("Error:", error);
       setError("Login failed. Please check your email or password.");
@@ -47,7 +49,7 @@ const LoginPage = () => {
         backgroundPosition: "center",
       }}
     >
-     <Toast message={"Successfull Login"} setFlag={showToast} flag={toast}/> 
+      <Toast message={"Successfull Login"} setFlag={showToast} flag={toast} />
       <div className="bg-gray-300 shadow-md rounded-lg px-8 py-6 w-full max-w-xl mx-4">
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-800">
           Welcome Back!
@@ -108,6 +110,9 @@ const LoginPage = () => {
 
           {error && <div className="text-red-500 text-sm mt-4">{error}</div>}
         </form>
+        {/* <div className="spinner-container">
+          <BounceLoader color="#36D7B7" loading={true} size={150} />
+        </div> */}
       </div>
     </div>
   );
