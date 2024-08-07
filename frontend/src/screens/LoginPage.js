@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import Toast from "../utils/Toast";
+import Toast from "../components/Toast";
 import BounceLoader from "react-spinners/BounceLoader";
-
+import jwt_decode, { jwtDecode } from "jwt-decode";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [toast, showToast] = useState(false);
   const [loading, setLoading] = useState(true);
-  // const navigate = useNavigate();
+  const [role, setRole] = useState("");
+  const navigate = useNavigate();
   const handleLogin = async (event) => {
     // Handle login logic here
     console.log("Email:", email);
@@ -32,8 +32,14 @@ const LoginPage = () => {
       const data = await response.json();
       console.log("Success:", data);
       localStorage.setItem("token", data.token);
-      showToast(true);
-      // navigate("/dashboard");
+      const decoded = jwtDecode(data.token);
+      const userRole = decoded.role;
+
+      if (userRole=="ADMIN"){
+      navigate("/admin-dashboard");}
+      else{
+        navigate("/student-dashboard")
+      }
     } catch (error) {
       console.error("Error:", error);
       setError("Login failed. Please check your email or password.");
@@ -49,7 +55,6 @@ const LoginPage = () => {
         backgroundPosition: "center",
       }}
     >
-      <Toast message={"Successfull Login"} setFlag={showToast} flag={toast} />
       <div className="bg-gray-300 shadow-md rounded-lg px-8 py-6 w-full max-w-xl mx-4">
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-800">
           Welcome Back!

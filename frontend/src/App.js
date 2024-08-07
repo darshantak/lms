@@ -1,6 +1,7 @@
-import LoginPage from "./components/LoginPage";
-import Dashboard from "./components/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
+import LoginPage from "./screens/LoginPage";
+import StudentDashboard from "./screens/StudentDashboard";
+import AdminDashboard from "./screens/AdminDashboard";
+import ProtectedRoute from "./screens/ProtectedRoute";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 function App() {
@@ -10,8 +11,12 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route
-            path="/dashboard"
-            element={<ProtectedRoute element={<Dashboard />} />}
+            path="/admin-dashboard"
+            element={<ProtectedRoute element={<AdminDashboard />} />}
+          />
+          <Route
+            path="/student-dashboard"
+            element={<ProtectedRoute element={<StudentDashboard />} />}
           />
         </Routes>
       </Router>
