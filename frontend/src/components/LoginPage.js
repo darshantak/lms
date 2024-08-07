@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+// import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Toast from "../utils/Toast";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const notifyToast = (message) => {
-    toast(message);
-  };
+  const [toast, showToast] = useState(false)
   const navigate = useNavigate();
   const handleLogin = async (event) => {
     // Handle login logic here
@@ -26,15 +24,13 @@ const LoginPage = () => {
       });
 
       if (!response.ok) {
-        notifyToast("Network response is not ok");
         // throw new Error("Network response not ok");
       }
 
       const data = await response.json();
       console.log("Success:", data);
-      notifyToast("Successfull Login");
       localStorage.setItem("token", data.token);
-
+      showToast(true)
       navigate("/dashboard");
     } catch (error) {
       console.error("Error:", error);
@@ -51,7 +47,7 @@ const LoginPage = () => {
         backgroundPosition: "center",
       }}
     >
-      <ToastContainer />
+     <Toast message={"Successfull Login"} setFlag={showToast} flag={toast}/> 
       <div className="bg-gray-300 shadow-md rounded-lg px-8 py-6 w-full max-w-xl mx-4">
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-800">
           Welcome Back!
@@ -105,10 +101,11 @@ const LoginPage = () => {
           </div>
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full flex justify-center py-2 px-4 btn btn-neutral"
           >
             Login
           </button>
+
           {error && <div className="text-red-500 text-sm mt-4">{error}</div>}
         </form>
       </div>
