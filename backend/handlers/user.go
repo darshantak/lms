@@ -48,7 +48,7 @@ func RegisterUser(c *gin.Context) {
 	// 	return
 	// }
 
-	sqlStatementForLms := fmt.Sprintf("INSERT INTO users (username, role, emp_type, team, training_assigned, training_completed, created_at,email) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')", user.Username, user.Role, empType, team, "{}", "{}", time.Now().Format("2006-01-02 15:04:05"),user.Email)
+	sqlStatementForLms := fmt.Sprintf("INSERT INTO users (username, role, emp_type, team, training_assigned, training_completed, created_at,email) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s')", user.Username, user.Role, empType, team, "{}", "{}", time.Now().Format("2006-01-02 15:04:05"), user.Email)
 
 	fmt.Println(sqlStatementForLms)
 
@@ -63,7 +63,7 @@ func RegisterUser(c *gin.Context) {
 
 func LoginUser(c *gin.Context) {
 	var userAuthDetails models.UserAuthDetails
-	var storedHash string
+	var storedHash, role string
 
 	err := c.ShouldBindJSON(&userAuthDetails)
 	if err != nil {
@@ -76,11 +76,11 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 
-	sqlStatement := fmt.Sprintf("SELECT password_hash FROM user_auth WHERE email='%s'", userAuthDetails.Email)
+	sqlStatement := fmt.Sprintf("SELECT password_hash,role_type FROM user_auth WHERE email='%s'", userAuthDetails.Email)
 
 	row := database.DB.QueryRowx(sqlStatement)
 
-	err = row.Scan(&storedHash)
+	err = row.Scan(&storedHash, &role)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get the row from the database"})
 		return
@@ -92,7 +92,7 @@ func LoginUser(c *gin.Context) {
 	}
 
 	//Generate JWT here
-	token, err := GenerateToken(userAuthDetails.Email)
+	token, err := GenerateToken(userAuthDetails.Email, role)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate the token"})
 		return
