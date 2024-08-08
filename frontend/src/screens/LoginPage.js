@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-import Toast from "../components/Toast";
-import BounceLoader from "react-spinners/BounceLoader";
-import jwt_decode, { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -10,7 +10,7 @@ function Toast({message,setFlag,flag}) {
                 navigate("/dashboard");
             }, 3000);
             return () => clearTimeout(timer)
-        }
+        } 
     })
 
     if (!flag) return null;
